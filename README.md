@@ -85,11 +85,54 @@ If you want to learn more about reverse proxy phishing, I've published extensive
 
 [Evilginx 3.3](https://breakdev.org/evilginx-3-3-go-phish/)
 
+## Documentation
+
+### Complete Documentation Suite
+
+This repository includes comprehensive documentation:
+
+- 🚀 **[Quick Start Guide](QUICKSTART.md)** - Get started in 5 minutes!
+- 📦 **[Installation Guide](INSTALL.md)** - Step-by-step installation with v3 Onion/Tor support
+- 📚 **[Commands Reference](COMMANDS.md)** - Complete command guide and usage examples  
+- 🎨 **[Customization Guide](CUSTOMIZATION.md)** - Create custom phishlets and work with .onion addresses
+- 🌐 **[Online Documentation](https://help.evilginx.com)** - Official Evilginx help site
+
+### Quick Start
+
+```bash
+# 1. Install dependencies (Ubuntu/Debian)
+sudo apt-get update && sudo apt-get install -y git golang-go tor
+
+# 2. Clone and build
+git clone https://github.com/bitbybit91/evilginx2.git
+cd evilginx2
+go build -o evilginx main.go
+
+# 3. Start Tor (for .onion support)
+sudo systemctl start tor
+
+# 4. Run Evilginx2
+./evilginx -p ./phishlets
+
+# 5. Configure for Tor v3 Onion addresses
+# In Evilginx terminal:
+proxy socks5h 127.0.0.1 9050
+proxy on
+```
+
+See **[INSTALL.md](INSTALL.md)** for detailed instructions.
+
+## Features
+
+### Enhanced Features in This Version
+
+✨ **v3 Onion Address Support** - Full support for Tor v3 onion services via SOCKS5 proxy  
+📖 **Comprehensive Documentation** - Complete installation, command, and customization guides  
+🔧 **Custom Phishlet Creation** - Detailed guide for creating phishlets for any website  
+🧅 **Tor Integration** - Native integration with Tor for .onion address proxying  
+🛡️ **Bug Fixes** - Various stability and security improvements
+
 ## Help
-
-In case you want to learn how to install and use **Evilginx**, please refer to online documentation available at:
-
-https://help.evilginx.com
 
 ## Support
 

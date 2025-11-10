@@ -3,3 +3,6 @@ build/
 private/
 /phishlets
 !/phishlets/example.yaml
+!/phishlets/onion-example.yaml
+!/phishlets/github-onion.yaml
+/evilginx

