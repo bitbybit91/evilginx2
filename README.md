@@ -91,6 +91,7 @@ If you want to learn more about reverse proxy phishing, I've published extensive
 
 This repository includes comprehensive documentation:
 
+- 🚀 **[Quick Start Guide](QUICKSTART.md)** - Get started in 5 minutes!
 - 📦 **[Installation Guide](INSTALL.md)** - Step-by-step installation with v3 Onion/Tor support
 - 📚 **[Commands Reference](COMMANDS.md)** - Complete command guide and usage examples  
 - 🎨 **[Customization Guide](CUSTOMIZATION.md)** - Create custom phishlets and work with .onion addresses
